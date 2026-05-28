@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plataforma de Esportes — Projeto Integrador ADS</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#071A2F;--white:#F8FAFC;--lime:#B7F000;--orange:#FF8A00;
+  --glass:rgba(255,255,255,.07);--glass-border:rgba(255,255,255,.13);
+}
+body{font-family:'Manrope',system-ui,sans-serif;background:var(--navy);color:var(--white);overflow:hidden;height:100vh;width:100vw}
+#deck{width:100%;height:100%;position:relative}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 64px;opacity:0;pointer-events:none;transition:opacity .5s,transform .5s;transform:translateY(30px)}
+.slide.active{opacity:1;pointer-events:all;transform:translateY(0)}
+.slide.out{opacity:0;transform:translateY(-30px)}
+
+/* BG patterns */
+.slide::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0}
+.s1::before{background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(183,240,0,.12) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 10% 80%,rgba(255,138,0,.08) 0%,transparent 60%)}
+.s2::before,.s3::before{background:radial-gradient(ellipse 60% 50% at 80% 30%,rgba(255,138,0,.08) 0%,transparent 70%)}
+.s4::before,.s9::before{background:radial-gradient(ellipse 70% 60% at 20% 50%,rgba(183,240,0,.1) 0%,transparent 70%)}
+.s5::before,.s10::before{background:radial-gradient(ellipse 50% 50% at 70% 60%,rgba(183,240,0,.08) 0%,transparent 60%)}
+.s6::before,.s7::before,.s8::before{background:radial-gradient(ellipse 60% 50% at 30% 30%,rgba(255,138,0,.07) 0%,transparent 70%)}
+
+/* Grid noise overlay */
+.slide::after{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 40px),repeating-linear-gradient(90deg,rgba(255,255,255,.015) 0px,rgba(255,255,255,.015) 1px,transparent 1px,transparent 40px);pointer-events:none;z-index:0}
+
+.slide>*{position:relative;z-index:1}
+.slide-inner{width:100%;max-width:1100px;display:flex;flex-direction:column;gap:24px}
+
+/* TYPOGRAPHY */
+.label{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--lime);opacity:.85}
+.label.org{color:var(--orange)}
+h1{font-size:3.8rem;font-weight:900;line-height:1.05;letter-spacing:-.02em}
+h2{font-size:2.4rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
+h3{font-size:1.15rem;font-weight:700}
+.sub{font-size:1.15rem;font-weight:500;color:rgba(248,250,252,.65);max-width:600px;line-height:1.6}
+.impact{font-size:1rem;font-weight:700;color:var(--lime);letter-spacing:.04em}
+.bullet-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.bullet-list li{display:flex;align-items:center;gap:10px;font-size:.95rem;font-weight:600;color:rgba(248,250,252,.85)}
+.bullet-list li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--lime);flex-shrink:0}
+.bullet-list.org li::before{background:var(--orange)}
+
+/* GLASS CARD */
+.card{background:var(--glass);border:1px solid var(--glass-border);border-radius:16px;padding:24px 28px;backdrop-filter:blur(10px)}
+.card-title{font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin-bottom:12px}
+.card-title.org{color:var(--orange)}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:6px 14px;border-radius:100px;font-size:.78rem;font-weight:700;letter-spacing:.04em}
+.chip.lime{background:rgba(183,240,0,.15);color:var(--lime);border:1px solid rgba(183,240,0,.3)}
+.chip.org{background:rgba(255,138,0,.15);color:var(--orange);border:1px solid rgba(255,138,0,.3)}
+
+/* COLS */
+.cols{display:grid;gap:20px}
+.cols-2{grid-template-columns:1fr 1fr}
+.cols-3{grid-template-columns:1fr 1fr 1fr}
+
+/* PIN */
+.pin{display:inline-flex;flex-direction:column;align-items:center;cursor:default}
+.pin-dot{width:16px;height:16px;background:var(--orange);border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 0 0 4px rgba(255,138,0,.25);animation:pulse 2s ease-in-out infinite}
+.pin-dot.lime{background:var(--lime);box-shadow:0 0 0 4px rgba(183,240,0,.25)}
+.pin-line{width:2px;height:10px;background:rgba(255,255,255,.3)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(255,138,0,.25)}50%{box-shadow:0 0 0 10px rgba(255,138,0,.05)}}
+.pin-dot.lime{animation:pulselime 2s ease-in-out infinite}
+@keyframes pulselime{0%,100%{box-shadow:0 0 0 4px rgba(183,240,0,.25)}50%{box-shadow:0 0 0 10px rgba(183,240,0,.05)}}
+
+/* FLOW */
+.flow{display:flex;align-items:center;gap:0;flex-wrap:nowrap}
+.flow-step{background:var(--glass);border:1px solid var(--glass-border);border-radius:12px;padding:12px 16px;font-size:.82rem;font-weight:700;text-align:center;white-space:nowrap;min-width:110px}
+.flow-step.highlight{background:rgba(183,240,0,.12);border-color:rgba(183,240,0,.4);color:var(--lime)}
+.flow-arrow{color:rgba(255,255,255,.35);font-size:1.1rem;padding:0 6px;flex-shrink:0}
+
+/* MOCK */
+.mockup{background:#0D2240;border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden}
+.mock-bar{background:#0A1A30;padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,.07)}
+.mock-bar-search{flex:1;background:rgba(255,255,255,.07);border-radius:8px;padding:6px 12px;font-size:.78rem;color:rgba(255,255,255,.5)}
+.mock-filters{display:flex;gap:6px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.07)}
+.mock-filter{padding:4px 10px;border-radius:100px;font-size:.7rem;font-weight:700;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6)}
+.mock-filter.active{background:rgba(183,240,0,.15);border-color:rgba(183,240,0,.4);color:var(--lime)}
+.mock-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.mock-list{padding:12px;display:flex;flex-direction:column;gap:8px;border-right:1px solid rgba(255,255,255,.07)}
+.mock-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px}
+.mock-card-name{font-size:.8rem;font-weight:700;margin-bottom:2px}
+.mock-card-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px}
+.mock-card-tag{font-size:.63rem;font-weight:700;padding:2px 7px;border-radius:100px}
+.mock-card-tag.sport{background:rgba(183,240,0,.15);color:var(--lime)}
+.mock-card-tag.avail{background:rgba(255,138,0,.15);color:var(--orange)}
+.mock-card-stars{font-size:.7rem;color:var(--orange)}
+.mock-map{background:#0A1A30;display:flex;align-items:center;justify-content:center;min-height:160px;position:relative;overflow:hidden}
+.map-grid{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0,rgba(255,255,255,.04) 1px,transparent 1px,transparent 30px),repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0,rgba(255,255,255,.04) 1px,transparent 1px,transparent 30px)}
+.map-pins{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:30px}
+
+/* SPORT ICONS */
+.sport-icon{font-size:2rem}
+
+/* PROGRESS */
+#progress{position:fixed;top:0;left:0;height:3px;background:var(--lime);transition:width .4s;z-index:100}
+#nav{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;z-index:100;background:rgba(7,26,47,.7);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:8px 20px}
+.nav-btn{background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:1.1rem;padding:4px 8px;border-radius:8px;transition:.2s;font-family:inherit}
+.nav-btn:hover{color:var(--lime);background:rgba(183,240,0,.1)}
+#counter{font-size:.82rem;font-weight:700;color:rgba(255,255,255,.5);min-width:56px;text-align:center}
+#notes-btn{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);cursor:pointer;font-size:.72rem;font-weight:700;padding:4px 12px;border-radius:100px;transition:.2s;font-family:inherit;letter-spacing:.06em}
+#notes-btn:hover{border-color:var(--lime);color:var(--lime)}
+
+/* NOTES PANEL */
+#notes{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);width:min(700px,90vw);background:rgba(7,26,47,.92);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:20px 24px;font-size:.85rem;line-height:1.7;color:rgba(248,250,252,.8);backdrop-filter:blur(16px);display:none;z-index:99;max-height:220px;overflow-y:auto}
+#notes.open{display:block}
+
+/* MEMBER BADGE */
+.member{display:inline-flex;align-items:center;gap:8px;background:rgba(255,138,0,.12);border:1px solid rgba(255,138,0,.3);border-radius:100px;padding:5px 14px 5px 10px;font-size:.78rem;font-weight:700;color:var(--orange)}
+.member-dot{width:8px;height:8px;border-radius:50%;background:var(--orange)}
+
+/* IMPACT CHAIN */
+.chain{display:flex;align-items:center;gap:0;flex-wrap:nowrap;width:100%}
+.chain-item{flex:1;text-align:center;padding:14px 8px;font-size:.78rem;font-weight:700;line-height:1.4;background:var(--glass);border:1px solid var(--glass-border);border-radius:12px}
+.chain-item.bad{border-color:rgba(255,80,80,.3);color:rgba(255,120,120,.9)}
+.chain-arrow{color:rgba(255,255,255,.3);padding:0 8px;font-size:1.2rem;flex-shrink:0}
+
+/* ECO */
+.eco{display:flex;align-items:center;justify-content:center;gap:24px}
+.eco-node{background:var(--glass);border:1px solid var(--glass-border);border-radius:16px;padding:18px 24px;text-align:center;min-width:160px}
+.eco-center{background:rgba(183,240,0,.12);border-color:rgba(183,240,0,.4)}
+.eco-label{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:6px}
+.eco-title{font-size:1rem;font-weight:800;color:var(--white)}
+.eco-center .eco-title{color:var(--lime)}
+.eco-arrow{font-size:1.4rem;color:rgba(255,255,255,.25)}
+.revenue-tags{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.rev-tag{font-size:.73rem;font-weight:700;padding:4px 12px;border-radius:100px;background:rgba(183,240,0,.1);color:var(--lime);border:1px solid rgba(183,240,0,.2);text-align:center}
+
+/* ANIM */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.slide.active .anim-1{animation:fadeUp .5s .1s both}
+.slide.active .anim-2{animation:fadeUp .5s .2s both}
+.slide.active .anim-3{animation:fadeUp .5s .3s both}
+.slide.active .anim-4{animation:fadeUp .5s .4s both}
+.slide.active .anim-5{animation:fadeUp .5s .5s both}
+.slide.active .anim-6{animation:fadeUp .5s .6s both}
+
+/* S1 specific */
+.hero-line{display:flex;align-items:center;gap:16px}
+.hero-icons{display:flex;gap:12px;align-items:center}
+.hero-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;background:var(--glass);border:1px solid var(--glass-border)}
+.title-accent{color:var(--lime)}
+.title-accent2{color:var(--orange)}
+
+/* DIVIDER */
+.divider{width:48px;height:3px;background:var(--lime);border-radius:2px}
+.divider.org{background:var(--orange)}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<div id="deck">
+
+<!-- SLIDE 1: CAPA -->
+<div class="slide s1 active" data-notes="Boa tarde a todos. Hoje apresentamos nosso Projeto Integrador: a Plataforma de Esportes. A ideia nasceu de uma dificuldade real: encontrar onde praticar esporte na cidade costuma ser confuso e demorado. Nossa proposta é resolver isso com tecnologia. Ao longo dessa apresentação, vamos mostrar o problema, a solução que desenvolvemos, nosso público-alvo, os requisitos, o fluxo do sistema e o protótipo. Cada um do grupo vai falar sobre uma parte. Vamos começar.">
+  <div class="slide-inner" style="align-items:center;text-align:center;gap:32px">
+    <div class="anim-1">
+      <div class="chips" style="justify-content:center;gap:8px">
+        <span class="chip lime">⚽ Futebol</span>
+        <span class="chip org">🏀 Basquete</span>
+        <span class="chip lime">🏐 Vôlei</span>
+        <span class="chip org">🎾 Tênis</span>
+        <span class="chip lime">🏊 Natação</span>
+      </div>
+    </div>
+    <div class="anim-2" style="display:flex;align-items:center;gap:20px;justify-content:center">
+      <div class="pin"><div class="pin-dot lime"></div><div class="pin-line"></div></div>
+      <h1>Plataforma de <span class="title-accent">Esportes</span></h1>
+      <div class="pin"><div class="pin-dot"></div><div class="pin-line"></div></div>
+    </div>
+    <p class="sub anim-3" style="text-align:center;max-width:560px">Conectando pessoas aos espaços esportivos da cidade</p>
+    <div class="anim-4" style="display:flex;align-items:center;gap:12px;background:rgba(183,240,0,.08);border:1px solid rgba(183,240,0,.25);border-radius:100px;padding:10px 24px">
+      <span style="color:var(--lime);font-size:1rem">⚡</span>
+      <span class="impact">Do interesse à prática em poucos cliques.</span>
+    </div>
+    <div class="anim-5 hero-icons">
+      <div class="hero-icon">🗺️</div>
+      <div class="hero-icon">📍</div>
+      <div class="hero-icon">⭐</div>
+      <div class="hero-icon">🔍</div>
+    </div>
+    <p class="anim-6" style="font-size:.78rem;color:rgba(255,255,255,.3);font-weight:600;letter-spacing:.08em">PROJETO INTEGRADOR · ADS · 2025</p>
+  </div>
+</div>
+
+<!-- SLIDE 2: PROBLEMA -->
+<div class="slide s2" data-notes="Sou o Victor e vou falar sobre o problema que motivou esse projeto. Hoje em dia, quem quer praticar esporte na cidade enfrenta uma busca fragmentada. As informações estão espalhadas em páginas de prefeitura, grupos de WhatsApp, redes sociais e boca a boca. Não existe um canal centralizado com filtros úteis. Locais pouco conhecidos ficam vazios por falta de divulgação, e os dados que você encontra muitas vezes estão desatualizados. Isso desestimula quem quer começar a se exercitar.">
+  <div class="slide-inner">
+    <div class="anim-1"><span class="member"><span class="member-dot"></span>Victor — Problema</span></div>
+    <div class="divider anim-1"></div>
+    <h2 class="anim-2">O esporte está perto.<br><span class="title-accent">A informação não.</span></h2>
+    <div class="cols cols-2 anim-3" style="align-items:start;gap:32px">
+      <div>
+        <p class="sub" style="font-size:.95rem;margin-bottom:20px">Muitas pessoas querem praticar esportes, mas não sabem onde encontrar locais disponíveis na região.</p>
+        <ul class="bullet-list">
+          <li>Informações espalhadas em dezenas de fontes</li>
+          <li>Sem filtros úteis por esporte ou região</li>
+          <li>Locais pouco divulgados ficam vazios</li>
+          <li>Dados desatualizados e imprecisos</li>
+          <li>Busca longa e frustrante</li>
+        </ul>
+      </div>
+      <div class="anim-4" style="position:relative;height:220px;background:#0D2240;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08)">
+        <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 28px),repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 28px)"></div>
+        <div style="position:absolute;top:30px;left:40px"><div class="pin"><div class="pin-dot"></div><div class="pin-line"></div></div></div>
+        <div style="position:absolute;top:60px;left:120px"><div class="pin"><div class="pin-dot lime"></div><div class="pin-line"></div></div></div>
+        <div style="position:absolute;top:20px;right:40px"><div class="pin"><div class="pin-dot"></div><div class="pin-line"></div></div></div>
+        <div style="position:absolute;top:100px;right:80px"><div class="pin"><div class="pin-dot lime"></div><div class="pin-line"></div></div></div>
+        <div style="position:absolute;bottom:40px;left:60px"><div class="pin"><div class="pin-dot"></div><div class="pin-line"></div></div></div>
+        <div style="position:absolute;bottom:30px;right:50px"><div class="pin"><div class="pin-dot lime"></div><div class="pin-line"></div></div></div>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(7,26,47,.8);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:8px 16px;font-size:.78rem;font-weight:700;color:rgba(255,255,255,.5);white-space:nowrap">🔍 Onde jogar basquete perto de mim?</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: IMPACTO DO PROBLEMA -->
+<div class="slide s3" data-notes="Ainda com Victor. Quero mostrar o efeito em cadeia que esse problema causa. Quando a busca é difícil, as pessoas desistem. Quando desistem, os espaços ficam subutilizados. Gestores perdem visibilidade, e no final, quem perde é a saúde pública e a comunidade. É uma cadeia negativa que começa com algo simples: a falta de informação organizada. E é exatamente esse ponto que a nossa plataforma quer quebrar.">
+  <div class="slide-inner">
+    <div class="anim-1"><span class="member"><span class="member-dot"></span>Victor — Impacto</span></div>
+    <div class="divider anim-1"></div>
+    <h2 class="anim-2">Quando encontrar é difícil,<br><span class="title-accent2">praticar fica mais distante.</span></h2>
+    <div class="anim-3 chain">
+      <div class="chain-item bad">😤<br>Busca<br>confusa</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item bad">🚶<br>Usuário<br>desiste</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item bad">🏟️<br>Espaços<br>vazios</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item bad">💸<br>Gestores sem<br>visibilidade</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-item bad">❤️<br>Menos saúde<br>&amp; comunidade</div>
+    </div>
+    <div class="cols cols-2 anim-4" style="margin-top:8px">
+      <ul class="bullet-list org">
+        <li>Menos pessoas praticando esporte</li>
+        <li>Infraestrutura subutilizada</li>
+        <li>Frustração e abandono da busca</li>
+      </ul>
+      <ul class="bullet-list org">
+        <li>Oportunidades perdidas para gestores</li>
+        <li>Impacto direto na saúde e bem-estar</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: SOLUÇÃO -->
+<div class="slide s4" data-notes="Olá, sou a Gabrielle. Depois de entender o problema, vamos falar da solução. A proposta é uma plataforma web que centraliza as informações sobre espaços esportivos da cidade. O usuário entra, escolhe o esporte, a região, a disponibilidade, e encontra opções reais, avaliadas por outras pessoas. Gestores cadastram e atualizam os dados dos seus espaços. É simples assim: um lugar só para conectar quem quer praticar com quem oferece o espaço.">
+  <div class="slide-inner">
+    <div class="anim-1"><span class="member org"><span class="member-dot"></span>Gabrielle — Solução</span></div>
+    <div class="divider org anim-1"></div>
+    <h2 class="anim-2">Uma plataforma para <span class="title-accent">encontrar</span>,<br>avaliar e divulgar espaços esportivos.</h2>
+    <div class="cols cols-2 anim-3" style="align-items:start;gap:28px">
+      <div>
+        <p class="impact" style="margin-bottom:16px">Um único lugar para conectar pessoas, esportes e espaços.</p>
+        <ul class="bullet-list">
+          <li>Busca por esporte favorito</li>
+          <li>Filtro por região e bairro</li>
+          <li>Disponibilidade em tempo real</li>
+          <li>Avaliações de outros usuários</li>
+          <li>Cadastro e atualização por gestores</li>
+        </ul>
+      </div>
+      <div class="card anim-4" style="background:rgba(183,240,0,.06);border-color:rgba(183,240,0,.2)">
+        <div class="card-title">Como funciona</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px;font-size:.88rem;font-weight:600">
+            <span style="background:rgba(183,240,0,.2);color:var(--lime);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">1</span>
+            Usuário acessa e define preferências
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:.88rem;font-weight:600">
+            <span style="background:rgba(183,240,0,.2);color:var(--lime);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">2</span>
+            Sistema filtra e exibe locais no mapa
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:.88rem;font-weight:600">
+            <span style="background:rgba(183,240,0,.2);color:var(--lime);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">3</span>
+            Usuário vê detalhes, avalia e salva
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:.88rem;font-weight:600">
+            <span style="background:rgba(255,138,0,.2);color:var(--orange);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">G</span>
+            Gestor mantém dados atualizados
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: PÚBLICO-ALVO -->
+<div class="slide s5" data-notes="Oi, sou o Caio. Vou falar sobre para quem a plataforma é pensada. Temos dois perfis principais. De um lado, temos os usuários que buscam locais: jovens, estudantes, pessoas que querem se exercitar mais, comunidades de bairro. Do outro, temos quem oferece os espaços: gestores de quadras, academias, clubes, parques. A plataforma serve os dois lados ao mesmo tempo. Quanto mais gestores cadastrarem seus espaços, mais usuários encontram o que buscam. É um ciclo que se fortalece.">
+  <div class="slide-inner">
+    <div class="anim-1"><span class="member"><span class="member-dot"></span>Caio — Público-alvo</span></div>
+    <div class="divider anim-1"></div>
+    <h2 class="anim-2">Para quem <span class="title-accent">pratica</span> e para quem <span class="title-accent2">oferece</span>.</h2>
+    <div class="cols cols-2 anim-3" style="gap:20px">
+      <div class="card">
+        <div class="card-title">🏃 Quem pratica</div>
+        <ul class="bullet-list" style="margin-bottom:16px">
+          <li>Jovens e estudantes</li>
+          <li>Pessoas buscando atividade física</li>
+          <li>Comunidades locais e de bairro</li>
+          <li>Iniciantes que não sabem onde começar</li>
+        </ul>
+        <div class="chips">
+          <span class="chip lime">⚽</span><span class="chip lime">🏀</span><span class="chip lime">🏐</span><span class="chip lime">🎾</span><span class="chip lime">🏊</span>
+        </div>
+      </div>
+      <div class="card anim-4" style="border-color:rgba(255,138,0,.25);background:rgba(255,138,0,.05)">
+        <div class="card-title org">🏟️ Quem oferece</div>
+        <ul class="bullet-list org" style="margin-bottom:16px">
+          <li>Gestores de quadras e campos</li>
+          <li>Clubes e academias</li>
+          <li>Espaços públicos municipais</li>
+          <li>Espaços privados e centros esportivos</li>
+        </ul>
+        <div class="chips">
+          <span class="chip org">📍 Visibilidade</span>
+          <span class="chip org">📊 Dados</span>
+          <span class="chip org">⭐ Avaliações</span>
+        </div>
+      </div>
+    </div>
+    <div class="anim-5" style="display:flex;align-items:center;justify-content:center;gap:12px;padding:14px 24px;background:rgba(183,240,0,.06);border:1px solid rgba(183,240,0,.2);border-radius:12px">
+      <span style="font-size:.9rem;font-weight:600;color:rgba(255,255,255,.7)">Usuários</span>
+      <span style="color:rgba(255,255,255,.3)">↔</span>
+      <span style="color:var(--lime);font-weight:800">Plataforma de Esportes</span>
+      <span style="color:rgba(255,255,255,.3)">↔</span>
+      <span style="font-size:.9rem;font-weight:600;color:rgba(255,255,255,.7)">Gestores</span>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: REQUISITOS -->
+<div class="slide s6" data-notes="Olá, sou o Vinicius. Vou apresentar os requisitos do sistema. Dividimos em três categorias: funcionais, não funcionais e regras de negócio. Os requisitos funcionais definem o que o sistema faz. Os não funcionais definem como ele deve se comportar em termos de qualidade. E as regras de negócio garantem a integridade dos dados. Cada um desses requisitos foi levantado a partir das necessidades reais dos dois perfis de usuário que o Caio apresentou.">
+  <div class="slide-inner">
+    <div class="anim-1"><span class="member org"><span class="member-dot"></span>Vinicius — Requisitos</span></div>
+    <div class="divider org anim-1"></div>
+    <h2 class="anim-2">O que a plataforma precisa <span class="title-accent">entregar</span>.</h2>
+    <div class="cols cols-3 anim-3" style="gap:16px">
+      <div class="card">
+        <div class="card-title">⚙️ Funcionais</div>
+        <ul class="bullet-list" style="gap:8px">
+          <li style="font-size:.83rem">Cadastro de locais esportivos</li>
+          <li style="font-size:.83rem">Busca por esporte e região</li>
+          <li style="font-size:.83rem">Exibição de detalhes do espaço</li>
+          <li style="font-size:.83rem">Avaliação e feedback</li>
+          <li style="font-size:.83rem">Filtros e disponibilidade</li>
+        </ul>
+      </div>
+      <div class="card anim-4">
+        <div class="card-title org">🎯 Não Funcionais</div>
+        <ul class="bullet-list org" style="gap:8px">
+          <li style="font-size:.83rem">Interface simples e intuitiva</li>
+          <li style="font-size:.83rem">Informações claras e objetivas</li>
+          <li style="font-size:.83rem">Fácil acesso online</li>
+          <li style="font-size:.83rem">Boa usabilidade em mobile</li>
+        </ul>
+      </div>
+      <div class="card anim-5">
+        <div class="card-title" style="color:rgba(248,250,252,.6)">📋 Regras de Negócio</div>
+        <ul class="bullet-list" style="gap:8px">
+          <li style="font-size:.83rem">Local requer esporte, região e disponibilidade</li>
+          <li style="font-size:.83rem">Avaliações com notas válidas (1–5)</li>
+          <li style="font-size:.83rem">Gestores responsáveis pelos dados</li>
+          <li style="font-size:.83rem">Atualização obrigatória de disponibilidade</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: FLUXO -->
+<div class="slide s7" data-notes="Oi, sou a Julia. Vou mostrar como o sistema funciona na prática, através do fluxo de uso. O fluxo do usuário é bem direto: ele acessa a plataforma, escolhe um esporte e uma região, o sistema filtra os locais disponíveis, exibe os detalhes e o usuário pode avaliar ou salvar o local para depois. Para o gestor, o fluxo é ainda mais simples: ele acessa o painel, atualiza os dados do espaço e o sistema publica as informações atualizadas automaticamente. Queremos que nenhum dos dois fluxos tenha barreiras.">
+  <div class="slide-inner">
+    <div class="anim-1"><span class="member"><span class="member-dot"></span>Julia — Algoritmo / Fluxo</span></div>
+    <div class="divider anim-1"></div>
+    <h2 class="anim-2">Fluxo simples.<br><span class="title-accent">Experiência direta.</span></h2>
+    <div class="anim-3" style="display:flex;flex-direction:column;gap:16px">
+      <div>
+        <p style="font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--lime);margin-bottom:10px">Fluxo do usuário</p>
+        <div class="flow" style="flex-wrap:wrap;gap:4px">
+          <div class="flow-step">👤 Acessa</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">🏅 Escolhe esporte / região</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">🔍 Sistema filtra</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">📋 Exibe detalhes</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step highlight">⭐ Avalia ou salva</div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:10px">Fluxo do gestor</p>
+        <div class="flow" style="flex-wrap:wrap;gap:4px">
+          <div class="flow-step">🏢 Acessa painel</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" style="border-color:rgba(255,138,0,.4);color:var(--orange);background:rgba(255,138,0,.1)">✏️ Atualiza dados</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">⚙️ Sistema processa</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step" style="border-color:rgba(255,138,0,.4);color:var(--orange);background:rgba(255,138,0,.1)">✅ Publica atualização</div>
+        </div>
+      </div>
+    </div>
+    <div class="anim-4 cols cols-3" style="gap:12px;margin-top:4px">
+      <div class="card" style="padding:14px 18px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:4px">🔍</div>
+        <div style="font-size:.78rem;font-weight:700">Busca inteligente</div>
+      </div>
+      <div class="card" style="padding:14px 18px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:4px">🗺️</div>
+        <div style="font-size:.78rem;font-weight:700">Mapa interativo</div>
+      </div>
+      <div class="card" style="padding:14px 18px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:4px">⭐</div>
+        <div style="font-size:.78rem;font-weight:700">Avaliações reais</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: PROTÓTIPO -->
+<div class="slide s8" data-notes="Oi, eu sou o Lucas. Vou mostrar como ficou o protótipo visual da plataforma. A tela principal tem uma barra de busca no topo, filtros rápidos por esporte, região e disponibilidade, uma lista de cards de locais com nome, esporte, disponibilidade e avaliação, e um mapa com pins. O usuário consegue ver tudo o que precisa em uma única tela. O design foi pensado para ser limpo e funcional, sem sobrecarregar quem está acessando pela primeira vez.">
+  <div class="slide-inner">
+    <div class="cols cols-2 anim-1" style="gap:24px;align-items:start">
+      <div>
+        <span class="member org" style="margin-bottom:16px;display:inline-flex"><span class="member-dot"></span>Lucas — Protótipo</span>
+        <h2 style="margin-top:12px">Do mapa ao <span class="title-accent">local ideal</span>.</h2>
+        <p class="sub" style="font-size:.88rem;margin-top:8px;margin-bottom:16px">Tela principal com busca, filtros, cards e mapa integrado.</p>
+        <ul class="bullet-list" style="gap:8px">
+          <li style="font-size:.83rem">Barra de busca com texto livre</li>
+          <li style="font-size:.83rem">Filtros por esporte, região e disponibilidade</li>
+          <li style="font-size:.83rem">Cards com informações essenciais</li>
+          <li style="font-size:.83rem">Mapa com pins e avaliações</li>
+          <li style="font-size:.83rem">Botão "Ver detalhes" em cada local</li>
+        </ul>
+      </div>
+      <div class="mockup anim-2">
+        <div class="mock-bar">
+          <span style="font-size:.8rem;font-weight:800;color:var(--lime)">⚡ SportFind</span>
+          <div class="mock-bar-search">🔍  Buscar esporte ou local...</div>
+        </div>
+        <div class="mock-filters">
+          <div class="mock-filter active">⚽ Futebol</div>
+          <div class="mock-filter">🏀 Basquete</div>
+          <div class="mock-filter">🏐 Vôlei</div>
+          <div class="mock-filter">📍 Perto de mim</div>
+          <div class="mock-filter active">✅ Disponível</div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-list">
+            <div class="mock-card">
+              <div class="mock-card-name">Arena Vila Verde</div>
+              <div class="mock-card-tags">
+                <span class="mock-card-tag sport">⚽ Futebol</span>
+                <span class="mock-card-tag avail">✅ Hoje</span>
+              </div>
+              <div class="mock-card-stars">★★★★★ <span style="color:rgba(255,255,255,.5);font-size:.65rem">4.8</span></div>
+            </div>
+            <div class="mock-card">
+              <div class="mock-card-name">Quadra Central</div>
+              <div class="mock-card-tags">
+                <span class="mock-card-tag sport">🏀 Basquete</span>
+                <span class="mock-card-tag avail">🕐 Amanhã</span>
+              </div>
+              <div class="mock-card-stars">★★★★★ <span style="color:rgba(255,255,255,.5);font-size:.65rem">4.6</span></div>
+            </div>
+            <div class="mock-card">
+              <div class="mock-card-name">Espaço Movimento</div>
+              <div class="mock-card-tags">
+                <span class="mock-card-tag sport">🏐 Vôlei</span>
+                <span class="mock-card-tag avail">✅ Vagas abertas</span>
+              </div>
+              <div class="mock-card-stars">★★★★★ <span style="color:rgba(255,255,255,.5);font-size:.65rem">4.7</span></div>
+            </div>
+          </div>
+          <div class="mock-map">
+            <div class="map-grid"></div>
+            <div class="map-pins">
+              <div class="pin"><div class="pin-dot lime"></div><div class="pin-line"></div></div>
+              <div class="pin" style="margin-top:20px"><div class="pin-dot"></div><div class="pin-line"></div></div>
+              <div class="pin" style="margin-top:-15px"><div class="pin-dot lime"></div><div class="pin-line"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: DIFERENCIAL -->
+<div class="slide s9" data-notes="Aqui vamos falar sobre o diferencial e o valor da plataforma além do uso cotidiano. Não é só uma busca: é um ecossistema. Usuários encontram locais, gestores ganham visibilidade, e a plataforma pode crescer com modelos de receita como planos para estabelecimentos, destaque pago, parcerias com eventos esportivos e prefeituras. O produto é escalável: começa no bairro, expande para a cidade inteira, e pode virar referência nacional.">
+  <div class="slide-inner">
+    <div class="anim-1"><div class="label">Diferencial & Valor</div></div>
+    <div class="divider anim-1"></div>
+    <h2 class="anim-2">Mais que busca: um <span class="title-accent">ecossistema</span><br>esportivo urbano.</h2>
+    <div class="cols cols-2 anim-3" style="gap:24px;align-items:start">
+      <div>
+        <ul class="bullet-list" style="gap:10px">
+          <li>Resolve problema real de acesso à informação</li>
+          <li>Incentiva saúde, esporte e convivência</li>
+          <li>Dá visibilidade aos espaços esportivos</li>
+          <li>Pode gerar receita com planos e parcerias</li>
+          <li>Escalável para bairros, cidades e eventos</li>
+        </ul>
+      </div>
+      <div class="anim-4" style="display:flex;flex-direction:column;gap:16px">
+        <div class="eco">
+          <div class="eco-node">
+            <div class="eco-label">Usuários</div>
+            <div class="eco-title">👤 Praticantes</div>
+          </div>
+          <div class="eco-arrow">↔</div>
+          <div class="eco-node eco-center">
+            <div class="eco-label">Plataforma</div>
+            <div class="eco-title">⚡ SportFind</div>
+          </div>
+          <div class="eco-arrow">↔</div>
+          <div class="eco-node">
+            <div class="eco-label">Gestores</div>
+            <div class="eco-title">🏟️ Espaços</div>
+          </div>
+        </div>
+        <div class="card" style="padding:14px 18px">
+          <div class="card-title">💰 Modelo de receita</div>
+          <div class="revenue-tags">
+            <div class="rev-tag">📦 Planos para estabelecimentos</div>
+            <div class="rev-tag">⭐ Locais em destaque</div>
+            <div class="rev-tag">🤝 Parcerias e eventos esportivos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: CONCLUSÃO -->
+<div class="slide s10" data-notes="Para fechar, sou o Caio novamente. O projeto nasceu de uma dor real: encontrar onde praticar esporte na cidade não deveria ser difícil. Com a Plataforma de Esportes, a gente resolve isso de forma direta. Mais pessoas conseguem praticar, mais espaços ganham visibilidade, menos tempo é perdido na busca, e a infraestrutura da cidade é melhor aproveitada. A frase que resume tudo é essa: encontrar onde praticar esporte deve ser tão simples quanto escolher o esporte. Obrigado a todos.">
+  <div class="slide-inner" style="align-items:center;text-align:center;gap:28px">
+    <div class="anim-1"><span class="member"><span class="member-dot"></span>Caio — Conclusão</span></div>
+    <h2 class="anim-2" style="font-size:2.2rem">Informação dispersa vira <span class="title-accent">acesso real</span><br>ao esporte.</h2>
+    <div class="cols cols-2 anim-3" style="max-width:700px;gap:16px">
+      <ul class="bullet-list" style="text-align:left">
+        <li>Mais pessoas praticando esporte</li>
+        <li>Mais visibilidade para espaços</li>
+      </ul>
+      <ul class="bullet-list" style="text-align:left">
+        <li>Menos tempo perdido na busca</li>
+        <li>Maior uso da infraestrutura urbana</li>
+      </ul>
+    </div>
+    <div class="anim-4" style="background:rgba(183,240,0,.08);border:1px solid rgba(183,240,0,.3);border-radius:20px;padding:24px 40px;max-width:640px">
+      <p style="font-size:1.2rem;font-weight:800;line-height:1.5;color:var(--white)">"Encontrar onde praticar esporte deve ser <span style="color:var(--lime)">tão simples quanto escolher o esporte.</span>"</p>
+    </div>
+    <div class="anim-5 hero-icons">
+      <div class="hero-icon">⚽</div>
+      <div class="hero-icon">🏀</div>
+      <div class="pin" style="padding:0 8px"><div class="pin-dot lime"></div><div class="pin-line"></div></div>
+      <div class="hero-icon">🏐</div>
+      <div class="hero-icon">🎾</div>
+    </div>
+    <p class="anim-6" style="font-size:.78rem;color:rgba(255,255,255,.3);font-weight:600;letter-spacing:.08em">PROJETO INTEGRADOR · ADS · 2025 · OBRIGADO!</p>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- NAV -->
+<div id="nav">
+  <button class="nav-btn" id="prevBtn">◀</button>
+  <span id="counter">1 / 10</span>
+  <button class="nav-btn" id="nextBtn">▶</button>
+  <button id="notes-btn">📝 Notas</button>
+</div>
+<div id="notes"></div>
+
+<script>
+const slides=document.querySelectorAll('.slide');
+const progress=document.getElementById('progress');
+const counter=document.getElementById('counter');
+const notesDiv=document.getElementById('notes');
+const notesBtn=document.getElementById('notes-btn');
+let cur=0,notesOpen=false;
+
+function go(n){
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('out');
+  setTimeout(()=>slides[cur].classList.remove('out'),500);
+  cur=(n+slides.length)%slides.length;
+  slides[cur].classList.add('active');
+  progress.style.width=((cur+1)/slides.length*100)+'%';
+  counter.textContent=(cur+1)+' / '+slides.length;
+  if(notesOpen) showNotes();
+}
+
+function showNotes(){
+  notesDiv.textContent=slides[cur].dataset.notes||'';
+  notesDiv.classList.add('open');
+  notesOpen=true;
+}
+
+notesBtn.addEventListener('click',()=>{
+  if(notesOpen){notesDiv.classList.remove('open');notesOpen=false;}
+  else showNotes();
+});
+document.getElementById('nextBtn').addEventListener('click',()=>go(cur+1));
+document.getElementById('prevBtn').addEventListener('click',()=>go(cur-1));
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')go(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(cur-1);
+});
+progress.style.width='10%';
+</script>
+</body>
+</html>
