@@ -13,7 +13,7 @@
   ║  Coloque suas imagens com os nomes abaixo e elas aparecerão  ║
   ║  automaticamente nos slides. Ou troque o atributo src="..."  ║
   ║  diretamente no HTML para usar outros nomes/caminhos.        ║
-  ║                                                              ║
+  ║                            WORK                              ║
   ║  SLIDE 1 — Capa                                              ║
   ║    assets/capa-quaddra.png                                   ║
   ║                                                              ║
@@ -353,214 +353,6 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
 /* ─── NOTES PANEL ─── */
 #notes{position:fixed;bottom:86px;left:50%;transform:translateX(-50%);width:min(840px,90vw);background:rgba(7,26,47,.95);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:20px 26px;font-size:.92rem;line-height:1.75;color:rgba(248,250,252,.8);backdrop-filter:blur(16px);display:none;z-index:99;max-height:230px;overflow-y:auto}
 #notes.open{display:block}
-
-/* ══════════════════════════════════════════
-   LIGHTBOX — zoom de imagens ao clicar
-══════════════════════════════════════════ */
-#lightbox-overlay{
-  position:fixed;inset:0;background:rgba(2,8,18,.93);z-index:9999;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  opacity:0;pointer-events:none;
-  transition:opacity .3s;
-  backdrop-filter:blur(8px);
-  padding:32px;
-  cursor:zoom-out;
-}
-#lightbox-overlay.open{opacity:1;pointer-events:all}
-#lightbox-img-wrap{
-  position:relative;
-  max-width:min(92vw,1280px);
-  max-height:82vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  transform:scale(.9);
-  transition:transform .35s cubic-bezier(.22,.68,0,1.2);
-  cursor:default;
-}
-#lightbox-overlay.open #lightbox-img-wrap{transform:scale(1)}
-#lightbox-img{
-  max-width:100%;
-  max-height:78vh;
-  border-radius:14px;
-  display:block;
-  object-fit:contain;
-  box-shadow:0 0 0 1px rgba(183,240,0,.18),0 48px 96px rgba(0,0,0,.75);
-}
-#lightbox-caption{
-  margin-top:16px;
-  font-size:.8rem;
-  font-weight:700;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:rgba(248,250,252,.42);
-  text-align:center;
-  font-family:'Manrope',sans-serif;
-  max-width:600px;
-}
-#lightbox-close{
-  position:fixed;
-  top:20px;right:24px;
-  background:rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.2);
-  color:rgba(255,255,255,.85);
-  border-radius:50%;
-  width:44px;height:44px;
-  font-size:1.3rem;
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:.2s;
-  font-family:inherit;
-  z-index:10000;
-  line-height:1;
-}
-#lightbox-close:hover{background:rgba(255,255,255,.22);color:#fff;transform:scale(1.08)}
-#lightbox-hint{
-  position:fixed;bottom:76px;left:50%;transform:translateX(-50%);
-  font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  color:rgba(248,250,252,.25);
-  font-family:'Manrope',sans-serif;
-  pointer-events:none;
-}
-/* Cursor e hover em todas as imagens clicáveis */
-.media-slot img,
-.prototype-frame .frame-body img,
-.proto-thumb img{
-  cursor:zoom-in;
-  transition:opacity .2s,transform .2s;
-}
-.media-slot:hover img,
-.prototype-frame .frame-body:hover img,
-.proto-thumb:hover img{
-  opacity:.82;
-}
-/* Badge "Ampliar" que aparece no hover */
-.zoom-hint{
-  position:absolute;
-  bottom:10px;right:10px;
-  background:rgba(7,26,47,.92);
-  border:1px solid rgba(183,240,0,.4);
-  color:#B7F000;
-  font-size:.63rem;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;
-  padding:5px 12px;
-  border-radius:100px;
-  opacity:0;
-  transition:opacity .22s;
-  pointer-events:none;
-  z-index:5;
-  backdrop-filter:blur(8px);
-  white-space:nowrap;
-  font-family:'Manrope',sans-serif;
-}
-.media-slot:hover .zoom-hint,
-.prototype-frame .frame-body:hover .zoom-hint,
-.proto-thumb:hover .zoom-hint{opacity:1}
-
-
-/* ════════════════════════════════════════════
-   CORREÇÃO SLIDE 8 — Galeria de Fluxogramas
-   Mantém todos os fluxogramas dentro da área útil do slide
-════════════════════════════════════════════ */
-.s8{
-  justify-content:flex-start;
-  padding-top:34px;
-  padding-bottom:104px;
-}
-.s8 .slide-inner{
-  height:calc(100vh - 138px);
-  max-height:650px;
-  gap:10px !important;
-  min-height:0;
-}
-.s8 .s8-header{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  flex-wrap:wrap;
-  flex-shrink:0;
-}
-.s8 .s8-header h2{
-  font-size:1.82rem !important;
-  line-height:1.05;
-}
-.s8 .divider{
-  flex-shrink:0;
-}
-.s8 .flux-grid{
-  flex:1;
-  min-height:0;
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  grid-template-rows:repeat(2,minmax(0,1fr));
-  gap:10px;
-  overflow:hidden;
-}
-.s8 .flux-card{
-  min-width:0;
-  min-height:0;
-  max-height:100%;
-  height:100%;
-  border-radius:14px;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-.s8 .flux-img-wrap{
-  flex:1;
-  min-height:0;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#F5F8FF;
-  overflow:hidden;
-  padding:6px;
-}
-.s8 .flux-card img{
-  width:100% !important;
-  height:100% !important;
-  max-width:100%;
-  max-height:100%;
-  min-height:0 !important;
-  object-fit:contain !important;
-  background:#F5F8FF !important;
-  display:block;
-}
-.s8 .flux-card .image-placeholder{
-  flex:1;
-  width:100%;
-  height:100%;
-  min-height:0 !important;
-  padding:12px;
-}
-.s8 .flux-card .ph-icon{font-size:1.45rem}
-.s8 .flux-card .ph-text{font-size:.64rem}
-.s8 .flux-card .ph-hint{font-size:.58rem}
-.s8 .flux-caption{
-  flex-shrink:0;
-  padding:7px 10px;
-  font-size:.62rem;
-  font-weight:800;
-  letter-spacing:.09em;
-  text-transform:uppercase;
-  color:rgba(30,40,60,.68);
-  background:rgba(0,0,0,.08);
-  border-top:1px solid rgba(0,0,0,.08);
-  text-align:center;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.s8 .flux-caption.lime{color:#5f8500;}
-.s8 .zoom-hint{bottom:36px;right:8px;font-size:.56rem;padding:4px 9px;}
-@media (max-width:900px){
-  .s8{padding-left:28px;padding-right:28px;padding-bottom:96px;}
-  .s8 .flux-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));}
-  .s8 .s8-header h2{font-size:1.45rem !important;}
-}
-
 </style>
 </head>
 <body>
@@ -572,6 +364,13 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
 ════════════════════════════════════════════ -->
 <div class="slide s1 active"
   data-notes="Boa tarde. Eu sou o Caio, e junto com o grupo vou apresentar o Projeto Integrador I da Fatec Ipiranga. O projeto se chama QUADDRA — uma plataforma para conectar pessoas a espaços esportivos. Cada integrante vai conduzir uma parte. Vamos começar com o Victor, que vai falar sobre o problema.">
+
+  <!--
+    IMAGEM DE CAPA OPCIONAL
+    TROCAR SRC: Coloque sua imagem em assets/capa-quaddra.png
+    Ela aparece como elemento lateral direito na capa.
+    Se preferir sem imagem, delete o bloco .s1-hero abaixo.
+  -->
 
   <div class="slide-inner" style="align-items:center;text-align:center;gap:26px">
     <div class="anim-1">
@@ -597,6 +396,7 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
       <span class="impact">Do interesse à prática em poucos cliques.</span>
     </div>
 
+    <!-- TROCAR IMAGEM AQUI: assets/capa-quaddra.png — imagem hero opcional da capa -->
     <div class="anim-5 media-slot" style="width:min(480px,90%);max-height:140px;flex-direction:row;align-items:center;gap:0;border-radius:18px;overflow:hidden">
       <img src="./assets/capa.png" alt="Visual identidade QUADDRA" style="width:100%;height:140px;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
       <div class="image-placeholder" style="display:none;width:100%;min-height:80px">
@@ -607,11 +407,11 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
     </div>
 
     <div class="anim-6 members-row">
-      <span class="member-chip">Caio</span>
+      <span class="member-chip">Caio Higor</span>
       <span class="member-chip">Gabrielle</span>
       <span class="member-chip">Julia Cancio</span>
       <span class="member-chip">Lucas Diogo</span>
-      <span class="member-chip">Victor Hugo</span>
+      <span class="member-chip">Victor Hugo Pelity Eloi</span>
       <span class="member-chip">Vinicius Penedo</span>
     </div>
     <p style="font-size:.76rem;color:rgba(255,255,255,.22);font-weight:600;letter-spacing:.09em;animation:fadeUp .5s .75s both;opacity:0">PROJETO INTEGRADOR I · ADS · FATEC IPIRANGA · 2026 · Orient.: Prof. Esp. Samuel Henrique da Rocha</p>
@@ -630,6 +430,7 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
     <h2 class="anim-2">O esporte está perto.<br><span class="title-accent">A informação, não.</span></h2>
 
     <div class="cols cols-2 anim-3" style="align-items:start;gap:32px">
+      <!-- Coluna esquerda: texto e causas -->
       <div style="display:flex;flex-direction:column;gap:16px">
         <p class="sub" style="font-size:1.05rem">"Muitas pessoas querem praticar esportes, mas não sabem onde encontrar espaços disponíveis em sua região."</p>
         <div class="cols cols-2" style="gap:10px">
@@ -656,9 +457,12 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
         </div>
       </div>
 
+      <!-- Coluna direita: imagem editável do mapa do problema -->
       <div class="anim-4" style="display:flex;flex-direction:column;gap:10px">
+        <!-- TROCAR IMAGEM AQUI: substitua src abaixo pelo seu diagrama do mapa do problema -->
+        <!-- Arquivo sugerido: assets/mapa-problema.png -->
         <div class="media-slot light" style="height:240px;border-radius:16px">
-          <img src="assets/mapa-problema.png" alt="Mapa do Problema — QUADDRA" style="height:240px;object-fit:contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <img src="./assets/mapa-problema.png" alt="Mapa do Problema — QUADDRA" style="height:240px;object-fit:contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
           <div class="image-placeholder" style="height:240px">
             <div class="ph-icon">🗺️</div>
             <div class="ph-text">Mapa do Problema</div>
@@ -682,31 +486,36 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
     <div class="divider anim-1"></div>
     <h2 class="anim-2" style="font-size:2.5rem">Três ferramentas,<br><span class="title-accent">uma causa raiz.</span></h2>
 
+    <!-- Galeria de 3 diagramas editáveis -->
     <div class="anim-3 diagram-grid">
 
+      <!-- Card 5W2H -->
       <div class="diagram-card anim-3">
         <div class="diagram-card-header">
           <span class="analysis-chip">Análise 01</span>
           <span class="diagram-card-label">5W2H</span>
         </div>
+        <!-- TROCAR IMAGEM AQUI: coloque seu diagrama 5W2H em assets/diagrama-5w2h.png -->
         <div class="media-slot light diagram-card-body" style="border-radius:0;border:none;min-height:200px">
-          <img src="assets/diagrama-5w2h.png" alt="Diagrama 5W2H — QUADDRA" style="width:100%;min-height:200px;object-fit:contain;background:#F5F8FF" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <img src="./assets/diagrama-5w2h.png" alt="Diagrama 5W2H — QUADDRA" style="width:100%;min-height:200px;object-fit:contain;background:#F5F8FF" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
           <div class="image-placeholder" style="min-height:200px">
             <div class="ph-icon">📋</div>
             <div class="ph-text">Diagrama 5W2H</div>
-            <div class="ph-hint">assets/diagrama-5w2h.png</div>
+            <div class="ph-hint">./assets/diagrama-5w2h.png</div>
           </div>
           <div class="media-caption">What · Why · Who · When · Where · How · How Much</div>
         </div>
       </div>
 
+      <!-- Card Ishikawa -->
       <div class="diagram-card anim-4">
         <div class="diagram-card-header">
           <span class="analysis-chip">Análise 02</span>
           <span class="diagram-card-label">Ishikawa</span>
         </div>
+        <!-- TROCAR IMAGEM AQUI: coloque seu Diagrama de Ishikawa em assets/diagrama-ishikawa.png -->
         <div class="media-slot light diagram-card-body" style="border-radius:0;border:none;min-height:200px">
-          <img src="assets/diagrama-ishikawa.png" alt="Diagrama de Ishikawa — QUADDRA" style="width:100%;min-height:200px;object-fit:contain;background:#F5F8FF" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <img src="./assets/diagrama-ishikawa.png" alt="Diagrama de Ishikawa — QUADDRA" style="width:100%;min-height:200px;object-fit:contain;background:#F5F8FF" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
           <div class="image-placeholder" style="min-height:200px">
             <div class="ph-icon">🐟</div>
             <div class="ph-text">Diagrama de Ishikawa</div>
@@ -716,11 +525,13 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
         </div>
       </div>
 
+      <!-- Card Mapa do Problema -->
       <div class="diagram-card anim-5">
         <div class="diagram-card-header">
           <span class="analysis-chip">Análise 03</span>
           <span class="diagram-card-label">Mapa do Problema</span>
         </div>
+        <!-- TROCAR IMAGEM AQUI: coloque seu Mapa do Problema em assets/mapa-problema.png -->
         <div class="media-slot light diagram-card-body" style="border-radius:0;border:none;min-height:200px">
           <img src="assets/mapa-problema.png" alt="Mapa do Problema — QUADDRA" style="width:100%;min-height:200px;object-fit:contain;background:#F5F8FF" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
           <div class="image-placeholder" style="min-height:200px">
@@ -748,6 +559,7 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
     <h2 class="anim-2">Uma plataforma que <span class="title-accent">centraliza</span><br>busca, avaliação e divulgação de espaços.</h2>
 
     <div class="cols cols-2 anim-3" style="align-items:start;gap:28px">
+      <!-- Coluna esquerda: como funciona -->
       <div style="display:flex;flex-direction:column;gap:16px">
         <p class="impact" style="margin-bottom:4px">Locais públicos e privados em um só lugar.</p>
         <div class="card" style="background:rgba(183,240,0,.06);border-color:rgba(183,240,0,.2)">
@@ -779,7 +591,10 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
         </ul>
       </div>
 
+      <!-- Coluna direita: mockup em frame de navegador -->
       <div class="anim-4" style="display:flex;flex-direction:column;gap:10px">
+        <!-- TROCAR IMAGEM AQUI: coloque o print/mockup da solução em assets/mockup-solucao.png -->
+        <!-- A imagem encaixará automaticamente dentro da moldura de navegador abaixo -->
         <div class="prototype-frame" style="height:280px">
           <div class="frame-bar">
             <div class="wdot" style="background:#FF5F57"></div>
@@ -788,7 +603,7 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
             <div class="frame-url">quaddra.com.br — plataforma esportiva</div>
           </div>
           <div class="frame-body">
-            <img src="assets/mockup-solucao.png" alt="Mockup da solução QUADDRA" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <img src="./assets/mockup-solucao.png" alt="Mockup da solução QUADDRA" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="image-placeholder" style="display:none;height:100%;background:#0a1a2e">
               <div class="ph-icon">💻</div>
               <div class="ph-text">Mockup da Solução</div>
@@ -845,6 +660,7 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
       </div>
     </div>
 
+    <!-- Imagem opcional do público-alvo + conexão -->
     <div class="anim-5" style="display:flex;gap:16px;align-items:center">
       <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:16px;padding:14px 24px;background:rgba(183,240,0,.06);border:1px solid rgba(183,240,0,.2);border-radius:14px">
         <span style="font-size:.95rem;font-weight:600;color:rgba(255,255,255,.65)">Usuários</span>
@@ -853,6 +669,8 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
         <span style="color:rgba(255,255,255,.28);font-size:1.3rem">↔</span>
         <span style="font-size:.95rem;font-weight:600;color:rgba(255,255,255,.65)">Gestores</span>
       </div>
+      <!-- TROCAR IMAGEM AQUI: assets/publico-alvo.png — imagem/ilustração opcional do público -->
+      <!-- Delete este bloco se não quiser usar a imagem -->
       <div class="media-slot" style="width:220px;height:70px;flex-direction:row;border-radius:12px;overflow:hidden">
         <img src="assets/publico-alvo.png" alt="Público-alvo QUADDRA" style="width:100%;height:70px;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div class="image-placeholder" style="display:none;height:70px;width:100%">
@@ -877,6 +695,7 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
 
     <div class="anim-3" style="display:flex;gap:16px;align-items:start">
 
+      <!-- 3 colunas de requisitos -->
       <div style="flex:2;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
         <div class="card">
           <div class="card-title">⚙️ Funcionais<br><span style="font-size:.72rem;opacity:.6">RF01–RF09</span></div>
@@ -915,10 +734,12 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
         </div>
       </div>
 
+      <!-- Card lateral: tabela de requisitos editável -->
       <div class="anim-6" style="width:200px;flex-shrink:0;display:flex;flex-direction:column;gap:8px">
         <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(183,240,0,.6);margin-bottom:4px">📄 Base documental</div>
+        <!-- TROCAR IMAGEM AQUI: coloque print da tabela de requisitos em assets/tabela-requisitos.png -->
         <div class="media-slot light" style="height:190px;border-radius:14px">
-          <img src="./assets/tabela-solucoes.png" alt="Tabela de Requisitos do QUADDRA" style="height:190px;object-fit:contain;width:100%;background:#F5F8FF" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <img src="assets/tabela-requisitos.png" alt="Tabela de Requisitos do QUADDRA" style="height:190px;object-fit:contain;width:100%;background:#F5F8FF" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
           <div class="image-placeholder" style="height:190px">
             <div class="ph-icon">📊</div>
             <div class="ph-text">Tabela de Requisitos</div>
@@ -945,6 +766,7 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
 
     <div class="anim-3" style="display:flex;gap:20px;align-items:start">
 
+      <!-- Fluxos animados + sumário -->
       <div style="flex:2;display:flex;flex-direction:column;gap:14px">
         <div>
           <p style="font-size:.74rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--lime);margin-bottom:10px">Fluxo do usuário</p>
@@ -993,10 +815,12 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
         </div>
       </div>
 
+      <!-- Card lateral: imagem do pseudocódigo/algoritmo -->
       <div class="anim-5" style="width:220px;flex-shrink:0;display:flex;flex-direction:column;gap:8px">
         <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(183,240,0,.6);margin-bottom:4px">🧠 Base lógica do sistema</div>
+        <!-- TROCAR IMAGEM AQUI: coloque o print dos algoritmos/pseudocódigo em assets/algoritmo-fluxo.png -->
         <div class="media-slot light" style="height:220px;border-radius:14px">
-          <img src="./assets/algoritmo.png" alt="Algoritmos em pseudocódigo — QUADDRA" style="height:220px;object-fit:contain;width:100%;background:#F5F8FF" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <img src="assets/algoritmo-fluxo.png" alt="Algoritmos em pseudocódigo — QUADDRA" style="height:220px;object-fit:contain;width:100%;background:#F5F8FF" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
           <div class="image-placeholder" style="height:220px">
             <div class="ph-icon">🧠</div>
             <div class="ph-text">Algoritmo — Pseudocódigo</div>
@@ -1011,96 +835,86 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
 </div>
 
 <!-- ═══════════════════════════════════════════
-     SLIDE 8 — FLUXOGRAMAS (galeria) — CORRIGIDO
+     SLIDE 8 — FLUXOGRAMAS (galeria)
 ════════════════════════════════════════════ -->
 <div class="slide s8"
-  data-notes="Ainda com Julia. Os 9 algoritmos também foram representados como fluxogramas visuais. Aqui temos os 6 principais processos: cadastro de local, busca por esporte, busca por região, avaliação, atualização pelo gestor e disponibilidade em tempo real. Cada fluxograma mostra os passos, as decisões e os resultados possíveis. Para ver qualquer fluxograma com mais detalhe, basta clicar na imagem e ampliar.">
+  data-notes="Ainda com Julia. Os 9 algoritmos também foram representados como fluxogramas visuais. Aqui temos os 6 principais processos: cadastro de local, busca por esporte, busca por região, avaliação, atualização pelo gestor e disponibilidade em tempo real. Cada fluxograma mostra os passos, as decisões e os resultados possíveis. Cada decisão no fluxo reflete diretamente uma regra de negócio do sistema.">
 
-  <div class="slide-inner">
-    <div class="anim-1 s8-header">
+  <div class="slide-inner" style="gap:16px">
+    <div class="anim-1" style="display:flex;align-items:center;gap:16px">
       <span class="member"><span class="member-dot"></span>Julia — Fluxogramas</span>
-      <h2>Galeria de <span class="title-accent">Fluxogramas</span></h2>
+      <h2 style="font-size:2rem">Galeria de <span class="title-accent">Fluxogramas</span></h2>
     </div>
     <div class="divider anim-1"></div>
 
-    <div class="anim-2 flux-grid">
+    <!-- Layout: 1 grande + 2 pequenos na primeira linha; 3 na segunda linha -->
+    <div class="anim-2" style="display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:12px;flex:1">
 
-      <div class="media-slot light flux-card">
-        <div class="flux-img-wrap">
-          <img src="./assets/cadastro.png" alt="Fluxograma — Cadastro de Local Esportivo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div class="image-placeholder" style="display:none">
-            <div class="ph-icon">📝</div>
-            <div class="ph-text">Fluxograma — Cadastro</div>
-            <div class="ph-hint">assets/cadastro.png</div>
-          </div>
+      <!-- FLUXOGRAMA GRANDE: Cadastro de Local -->
+      <!-- TROCAR IMAGEM AQUI: coloque o fluxograma de cadastro em assets/fluxograma-cadastro.png -->
+      <div class="media-slot light" style="border-radius:14px;grid-row:span 2;min-height:0">
+        <img src="assets/fluxograma-cadastro.png" alt="Fluxograma — Cadastro de Local Esportivo" style="width:100%;flex:1;object-fit:contain;background:#F5F8FF;min-height:300px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="image-placeholder" style="flex:1;min-height:300px">
+          <div class="ph-icon">📝</div>
+          <div class="ph-text">Fluxograma — Cadastro</div>
+          <div class="ph-hint">assets/fluxograma-cadastro.png</div>
         </div>
-        <div class="zoom-hint">🔍 Ampliar</div>
-        <div class="flux-caption lime">Cadastro de Local</div>
+        <div class="media-caption lime">Cadastro de Local</div>
       </div>
 
-      <div class="media-slot light flux-card">
-        <div class="flux-img-wrap">
-          <img src="./assets/busca.png" alt="Fluxograma — Busca por Esporte" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div class="image-placeholder" style="display:none">
-            <div class="ph-icon">⚽</div>
-            <div class="ph-text">Busca por Esporte</div>
-            <div class="ph-hint">assets/busca.png</div>
-          </div>
+      <!-- TROCAR IMAGEM AQUI: assets/fluxograma-busca-esporte.png -->
+      <div class="media-slot light" style="border-radius:14px">
+        <img src="assets/fluxograma-busca-esporte.png" alt="Fluxograma — Busca por Esporte" style="width:100%;object-fit:contain;background:#F5F8FF;min-height:140px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="image-placeholder" style="min-height:140px">
+          <div class="ph-icon">⚽</div>
+          <div class="ph-text">Busca por Esporte</div>
+          <div class="ph-hint">assets/fluxograma-busca-esporte.png</div>
         </div>
-        <div class="zoom-hint">🔍 Ampliar</div>
-        <div class="flux-caption">Busca por Esporte</div>
+        <div class="media-caption">Busca por Esporte</div>
       </div>
 
-      <div class="media-slot light flux-card">
-        <div class="flux-img-wrap">
-          <img src="./assets/busca-regiao.png" alt="Fluxograma — Busca por Região" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div class="image-placeholder" style="display:none">
-            <div class="ph-icon">📍</div>
-            <div class="ph-text">Busca por Região</div>
-            <div class="ph-hint">assets/busca-regiao.png</div>
-          </div>
+      <!-- TROCAR IMAGEM AQUI: assets/fluxograma-busca-regiao.png -->
+      <div class="media-slot light" style="border-radius:14px">
+        <img src="assets/fluxograma-busca-regiao.png" alt="Fluxograma — Busca por Região" style="width:100%;object-fit:contain;background:#F5F8FF;min-height:140px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="image-placeholder" style="min-height:140px">
+          <div class="ph-icon">📍</div>
+          <div class="ph-text">Busca por Região</div>
+          <div class="ph-hint">assets/fluxograma-busca-regiao.png</div>
         </div>
-        <div class="zoom-hint">🔍 Ampliar</div>
-        <div class="flux-caption">Busca por Região</div>
+        <div class="media-caption">Busca por Região</div>
       </div>
 
-      <div class="media-slot light flux-card">
-        <div class="flux-img-wrap">
-          <img src="./assets/avalia.png" alt="Fluxograma — Avaliação de Local" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div class="image-placeholder" style="display:none">
-            <div class="ph-icon">⭐</div>
-            <div class="ph-text">Avaliação de Local</div>
-            <div class="ph-hint">assets/avalia.png</div>
-          </div>
+      <!-- TROCAR IMAGEM AQUI: assets/fluxograma-avaliacao.png -->
+      <div class="media-slot light" style="border-radius:14px">
+        <img src="assets/fluxograma-avaliacao.png" alt="Fluxograma — Avaliação de Local" style="width:100%;object-fit:contain;background:#F5F8FF;min-height:140px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="image-placeholder" style="min-height:140px">
+          <div class="ph-icon">⭐</div>
+          <div class="ph-text">Avaliação de Local</div>
+          <div class="ph-hint">assets/fluxograma-avaliacao.png</div>
         </div>
-        <div class="zoom-hint">🔍 Ampliar</div>
-        <div class="flux-caption">Avaliação de Local</div>
+        <div class="media-caption">Avaliação de Local</div>
       </div>
 
-      <div class="media-slot light flux-card">
-        <div class="flux-img-wrap">
-          <img src="./assets/insere-informacoes.png" alt="Fluxograma — Atualização por Gestor" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div class="image-placeholder" style="display:none">
-            <div class="ph-icon">🔐</div>
-            <div class="ph-text">Atualização por Gestor</div>
-            <div class="ph-hint">assets/insere-informacoes.png</div>
-          </div>
+      <!-- TROCAR IMAGEM AQUI: assets/fluxograma-gestor.png -->
+      <div class="media-slot light" style="border-radius:14px">
+        <img src="assets/fluxograma-gestor.png" alt="Fluxograma — Atualização por Gestor" style="width:100%;object-fit:contain;background:#F5F8FF;min-height:140px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="image-placeholder" style="min-height:140px">
+          <div class="ph-icon">🔐</div>
+          <div class="ph-text">Atualização por Gestor</div>
+          <div class="ph-hint">assets/fluxograma-gestor.png</div>
         </div>
-        <div class="zoom-hint">🔍 Ampliar</div>
-        <div class="flux-caption">Atualização por Gestor</div>
+        <div class="media-caption">Atualização por Gestor</div>
       </div>
 
-      <div class="media-slot light flux-card">
-        <div class="flux-img-wrap">
-          <img src="./assets/exibe-disponibilidade.png" alt="Fluxograma — Disponibilidade em Tempo Real" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div class="image-placeholder" style="display:none">
-            <div class="ph-icon">🟢</div>
-            <div class="ph-text">Disponibilidade</div>
-            <div class="ph-hint">assets/exibe-disponibilidade.png</div>
-          </div>
+      <!-- TROCAR IMAGEM AQUI: assets/fluxograma-disponibilidade.png -->
+      <div class="media-slot light" style="border-radius:14px">
+        <img src="assets/fluxograma-disponibilidade.png" alt="Fluxograma — Disponibilidade em Tempo Real" style="width:100%;object-fit:contain;background:#F5F8FF;min-height:140px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="image-placeholder" style="min-height:140px">
+          <div class="ph-icon">🟢</div>
+          <div class="ph-text">Disponibilidade</div>
+          <div class="ph-hint">assets/fluxograma-disponibilidade.png</div>
         </div>
-        <div class="zoom-hint">🔍 Ampliar</div>
-        <div class="flux-caption">Disponibilidade Atualizada</div>
+        <div class="media-caption">Disponibilidade Atualizada</div>
       </div>
 
     </div>
@@ -1121,7 +935,10 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
 
     <div class="anim-2" style="display:flex;gap:14px;align-items:start;flex:1">
 
+      <!-- Área principal: frame de browser com print do protótipo -->
       <div style="flex:2.2;display:flex;flex-direction:column;gap:10px">
+        <!-- TROCAR IMAGEM AQUI: coloque o print da tela inicial/home em assets/prototipo-home.png -->
+        <!-- Essa é a imagem principal do showcase do protótipo -->
         <div class="prototype-frame" style="height:320px">
           <div class="frame-bar">
             <div class="wdot" style="background:#FF5F57"></div>
@@ -1131,7 +948,7 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
             <div style="font-size:.72rem;font-weight:700;color:var(--lime);background:rgba(183,240,0,.1);border:1px solid rgba(183,240,0,.2);padding:3px 10px;border-radius:12px;white-space:nowrap;flex-shrink:0">📍 São Paulo, SP</div>
           </div>
           <div class="frame-body">
-            <img src="./assets/capa.png" alt="Tela inicial do protótipo QUADDRA" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <img src="assets/prototipo-home.png" alt="Tela inicial do protótipo QUADDRA" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="image-placeholder" style="display:none;height:100%;background:#0a1a2e">
               <div class="ph-icon">🖥️</div>
               <div class="ph-text">Tela Principal — Home</div>
@@ -1140,34 +957,39 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
           </div>
         </div>
 
+        <!-- Miniaturas: galeria de telas adicionais -->
         <div class="proto-thumbs">
+          <!-- TROCAR IMAGEM AQUI: assets/prototipo-busca.png -->
           <div class="proto-thumb">
-            <img src="./assets/prototipo-avalia.png" alt="Tela de busca QUADDRA" style="min-height:80px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <img src="assets/prototipo-busca.png" alt="Tela de busca QUADDRA" style="min-height:80px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="image-placeholder" style="display:none;height:80px;min-height:80px;background:#0a1a2e;border-radius:0">
               <div class="ph-icon" style="font-size:1.3rem">🔍</div>
               <div class="ph-hint">prototipo-busca.png</div>
             </div>
-            <div class="thumb-label">Avaliação</div>
+            <div class="thumb-label">Busca</div>
           </div>
+          <!-- TROCAR IMAGEM AQUI: assets/prototipo-detalhes.png -->
           <div class="proto-thumb">
-            <img src="./assets/prototipo-filtro.png" alt="Tela de detalhes QUADDRA" style="min-height:80px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <img src="assets/prototipo-detalhes.png" alt="Tela de detalhes QUADDRA" style="min-height:80px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="image-placeholder" style="display:none;height:80px;min-height:80px;background:#0a1a2e;border-radius:0">
               <div class="ph-icon" style="font-size:1.3rem">📋</div>
-              <div class="ph-hint">prototipo-filtro.png</div>
+              <div class="ph-hint">prototipo-detalhes.png</div>
             </div>
-            <div class="thumb-label">Filtros</div>
+            <div class="thumb-label">Detalhes</div>
           </div>
+          <!-- TROCAR IMAGEM AQUI: assets/prototipo-avaliacao.png -->
           <div class="proto-thumb">
-            <img src="./assets/prototipo-esportes.png" alt="Tela de avaliação QUADDRA" style="min-height:80px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <img src="assets/prototipo-avaliacao.png" alt="Tela de avaliação QUADDRA" style="min-height:80px" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
             <div class="image-placeholder" style="display:none;height:80px;min-height:80px;background:#0a1a2e;border-radius:0">
               <div class="ph-icon" style="font-size:1.3rem">⭐</div>
               <div class="ph-hint">prototipo-avaliacao.png</div>
             </div>
-            <div class="thumb-label">Busca</div>
+            <div class="thumb-label">Avaliação</div>
           </div>
         </div>
       </div>
 
+      <!-- Lateral: features do protótipo -->
       <div class="anim-3" style="flex:1;display:flex;flex-direction:column;gap:11px">
         <div class="card" style="padding:16px 18px">
           <div class="card-title">🎨 Funcionalidades demonstradas</div>
@@ -1193,6 +1015,7 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
             <span style="font-size:.82rem;font-weight:700;color:#93C5FD">Vagas abertas</span>
           </div>
         </div>
+        <div class="editable-note">Substitua os prints<br>pelas telas reais do protótipo</div>
       </div>
     </div>
   </div>
@@ -1210,6 +1033,7 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
     <h2 class="anim-2">Mais que busca: um <span class="title-accent">ecossistema</span><br>esportivo urbano.</h2>
 
     <div class="cols cols-2 anim-3" style="gap:24px;align-items:start">
+      <!-- Coluna esquerda: impacto e próximos passos -->
       <div style="display:flex;flex-direction:column;gap:14px">
         <ul class="bullet-list" style="gap:11px">
           <li>Resolve problema real de acesso à informação esportiva</li>
@@ -1229,7 +1053,9 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
         </div>
       </div>
 
+      <!-- Coluna direita: ecossistema HTML + imagem opcional -->
       <div class="anim-4" style="display:flex;flex-direction:column;gap:16px">
+        <!-- Ecossistema em HTML (sempre visível) -->
         <div class="eco">
           <div class="eco-node">
             <div class="eco-label">Praticantes</div>
@@ -1247,8 +1073,10 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
           </div>
         </div>
 
+        <!-- TROCAR IMAGEM AQUI: opcional — coloque gráfico/imagem do ecossistema em assets/ecossistema-quaddra.png -->
+        <!-- Se não quiser usar a imagem, delete o bloco abaixo -->
         <div class="media-slot" style="height:110px;border-radius:14px">
-          <img src="./assets/ecossistema-impacto.png" alt="Ecossistema QUADDRA" style="height:110px;width:100%;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <img src="assets/ecossistema-quaddra.png" alt="Ecossistema QUADDRA" style="height:110px;width:100%;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
           <div class="image-placeholder" style="display:none;height:110px">
             <div class="ph-icon">🌐</div>
             <div class="ph-text">Ecossistema / Impacto</div>
@@ -1279,8 +1107,11 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
     <div class="anim-1"><span class="member"><span class="member-dot"></span>Caio — Conclusão</span></div>
     <h2 class="anim-2" style="font-size:2.6rem">O <span class="title-accent">QUADDRA</span> transforma<br>informação dispersa em acesso real ao esporte.</h2>
 
+    <!-- Imagem de impacto opcional -->
+    <!-- TROCAR IMAGEM AQUI: coloque imagem de impacto em assets/conclusao-impacto.png -->
+    <!-- Pode ser foto de pessoas praticando esporte, quadra, cidade, ou mockup final -->
     <div class="anim-3 media-slot" style="width:min(640px,90%);height:120px;border-radius:18px;overflow:hidden">
-      <img src="./assets/impacto.png" alt="Impacto do QUADDRA — esporte acessível" style="width:100%;height:120px;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <img src="assets/conclusao-impacto.png" alt="Impacto do QUADDRA — esporte acessível" style="width:100%;height:120px;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
       <div class="image-placeholder" style="display:none;height:120px">
         <div class="ph-icon">🏆</div>
         <div class="ph-text">Imagem de Impacto Final</div>
@@ -1318,16 +1149,6 @@ h2{font-size:2.9rem;font-weight:800;line-height:1.1;letter-spacing:-.02em}
 </div>
 
 </div><!-- /deck -->
-
-<!-- ─── LIGHTBOX OVERLAY ─── -->
-<div id="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Visualização ampliada">
-  <button id="lightbox-close" aria-label="Fechar (ESC)">&#x2715;</button>
-  <div id="lightbox-img-wrap">
-    <img id="lightbox-img" src="" alt="">
-    <p id="lightbox-caption"></p>
-  </div>
-  <span id="lightbox-hint">Clique fora ou pressione ESC para fechar</span>
-</div>
 
 <!-- ─── NAVIGATION ─── -->
 <div id="nav">
@@ -1385,85 +1206,6 @@ document.querySelectorAll('.media-slot img, .prototype-frame img, .proto-thumb i
     if(ph) ph.style.display='flex';
   });
 });
-
-// ══════════════════════════════════════════
-// LIGHTBOX — zoom de imagens ao clicar
-// ══════════════════════════════════════════
-(function(){
-  var ov      = document.getElementById('lightbox-overlay');
-  var lbImg   = document.getElementById('lightbox-img');
-  var lbCap   = document.getElementById('lightbox-caption');
-  var lbWrap  = document.getElementById('lightbox-img-wrap');
-  var lbClose = document.getElementById('lightbox-close');
-
-  function openLB(src, cap){
-    lbImg.src = src;
-    lbCap.textContent = cap || '';
-    ov.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeLB(){
-    ov.classList.remove('open');
-    document.body.style.overflow = '';
-    setTimeout(function(){ lbImg.src = ''; }, 320);
-  }
-
-  lbClose.addEventListener('click', function(e){ e.stopPropagation(); closeLB(); });
-  ov.addEventListener('click', function(e){ if(e.target === ov) closeLB(); });
-  lbWrap.addEventListener('click', function(e){ e.stopPropagation(); });
-  document.addEventListener('keydown', function(e){
-    if(e.key === 'Escape') closeLB();
-    // Bloqueia navegação de slides quando lightbox aberto
-    if(ov.classList.contains('open') &&
-       (e.key==='ArrowRight'||e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='ArrowDown')){
-      e.stopImmediatePropagation();
-    }
-  }, true);
-
-  // Configura todas as imagens dos slots como clicáveis
-  function setupImages(){
-    var sel = '.media-slot img, .prototype-frame .frame-body img, .proto-thumb img';
-    document.querySelectorAll(sel).forEach(function(img){
-      if(img.dataset.lb) return;
-      img.dataset.lb = '1';
-
-      // Injeta badge "Ampliar" no container pai
-      var parent = img.parentElement;
-      if(!parent.querySelector('.zoom-hint')){
-        parent.style.position = 'relative';
-        var hint = document.createElement('span');
-        hint.className = 'zoom-hint';
-        hint.textContent = '🔍 Ampliar';
-        parent.appendChild(hint);
-      }
-
-      img.addEventListener('click', function(e){
-        // Não abre se imagem oculta (erro de carregamento)
-        if(this.style.display === 'none' || !this.src || this.src === window.location.href) return;
-        e.stopPropagation();
-
-        // Busca legenda no .media-caption ou .thumb-label mais próximo
-        var slot = this.closest('.media-slot, .prototype-frame, .proto-thumb');
-        var cap = '';
-        if(slot){
-          var c = slot.querySelector('.media-caption, .thumb-label');
-          if(c) cap = c.textContent.trim();
-        }
-        if(!cap) cap = this.alt || '';
-
-        openLB(this.src, cap);
-      });
-    });
-  }
-
-  // Roda na inicialização e observa DOM para imagens adicionadas dinamicamente
-  setupImages();
-  new MutationObserver(setupImages).observe(
-    document.getElementById('deck'),
-    {childList: true, subtree: true}
-  );
-})();
 </script>
 </body>
 </html>
